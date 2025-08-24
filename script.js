@@ -1,23 +1,26 @@
 async function showPosts() {
     const post_section = document.querySelector('.post-section')
 
-    const response = await axios.get('https://tarmeezacademy.com/api/v1/posts?limit=10')
+    const response = await axios.get('https://tarmeezacademy.com/api/v1/posts')
         .then(response => {
             post_section.innerHTML = ''
             const posts = response.data.data
 
             console.log(posts);
             for (const post of posts) {
-                const { created_at, title, image } = post
-                if (title !== null && image !== '') {
-                    console.log(true);
-                    post_section.innerHTML += `
+                let { created_at, title, image, comments_count } = post
+                let { username, profile_image } = post.author
+                if (typeof image === 'object') {
+                    image = profile_image
+                } else {
+                    image = image
+                }
+                post_section.innerHTML += `
               <div class="col-md-9 ">
                 <div class="card shadow ">
                     <div class="border">
-                        <img src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="user" class="rounded-circle m-2" width="40" height="40">
-                        <span class="fw-bold">@user</span>
+                        <img src="${image}" alt="user" class="rounded-circle m-2" width="40" height="40">
+                        <span class="fw-bold">${username}</span>
                     </div>
                     
                     <img src=${image} class="w-100" alt="user">
@@ -31,17 +34,16 @@ async function showPosts() {
                         <p class="card-text border-top">
 
                             <small class="text-body-secondary ">
-                                <i class="fa-solid fa-pen text-primary"></i> <span>comments(4)</span>
+                                <i class="fa-solid fa-pen text-primary"></i> <span>comments(${comments_count})</span>
                             </small>
                         </p>
                     </div>
                 </div>
             </div>
             `
-                }
-
-
             }
+
+
 
         })
         .catch(error => {
