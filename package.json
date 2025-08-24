@@ -1,0 +1,23 @@
+{
+  "name": "social-media",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sherif219960/Prayer-time.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sherif219960/Prayer-time/issues"
+  },
+  "homepage": "https://github.com/Sherif219960/Prayer-time#readme",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bootstrap": "^5.3.7"
+  }
+}
