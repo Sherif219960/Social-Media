@@ -1,10 +1,10 @@
 
-const url = 'https://tarmeezacademy.com/api/v1/'
+const url = 'https://tarmeezacademy.com/api/v1'
 
 async function showPosts(url) {
     const post_section = document.querySelector('.post-section')
 
-    const response = await axios.get(`${url}posts?limit=2`)
+    const response = await axios.get(`${url}/posts?limit=2`)
         .then(response => {
             post_section.innerHTML = ''
             const posts = response.data.data
@@ -74,23 +74,26 @@ showPosts(url)
 
 function myForm(e) {
     e.preventDefault(); // stop form from refreshing the page
-    alert("Form submission prevented!");
+    login()
+}
 
-    function login(url) {
-        const username = document.getElementById('username').value
-        const password = document.getElementById('password').value
-        const params = {
-            "username": username,
-            "password": password
-        }
-        axios.post(`${url}login`, params)
-            .then((response) => {
-                console.log(response.date);
-
-            })
+function login() {
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    const params = {
+        "username": username,
+        "password": password
     }
+    const baseUrl = 'https://tarmeezacademy.com/api/v1'
+    const model = bootstrap.Modal.getInstance(document.getElementById('loginModal'))
+    axios.post(`${baseUrl}/login`, params)
+        .then((response) => {
+            console.log(response.data);
+            model.hide()
 
+        }).catch((error) => {
+            console.log(error.message);
 
-
+        })
 
 }
