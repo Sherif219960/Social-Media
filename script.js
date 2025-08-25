@@ -78,8 +78,9 @@ function myForm(e) {
 }
 
 function login() {
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
+    let username = document.getElementById('username').value
+    let password = document.getElementById('password').value
+    const login_logout = document.querySelector('.login-logout')
     const params = {
         "username": username,
         "password": password
@@ -88,9 +89,22 @@ function login() {
     const model = bootstrap.Modal.getInstance(document.getElementById('loginModal'))
     axios.post(`${baseUrl}/login`, params)
         .then((response) => {
-            console.log(response.data);
-            model.hide()
+            if (response.data) {
+                console.log(response.data);
+                model.hide()
+                login_logout.innerHTML = ''
+                login_logout.innerHTML = `
 
+                    <button type="button" class="btn btn-outline-danger me-2 btn-sm" >
+                        Logout
+                    </button>
+                   <img
+                     src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
+                     alt="user" class="rounded-circle" width="30" height="30">
+                
+                `
+
+            }
         }).catch((error) => {
             console.log(error.message);
 
