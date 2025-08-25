@@ -1,7 +1,10 @@
-async function showPosts() {
+
+const url = 'https://tarmeezacademy.com/api/v1/'
+
+async function showPosts(url) {
     const post_section = document.querySelector('.post-section')
 
-    const response = await axios.get('https://tarmeezacademy.com/api/v1/posts')
+    const response = await axios.get(`${url}posts?limit=2`)
         .then(response => {
             post_section.innerHTML = ''
             const posts = response.data.data
@@ -63,4 +66,31 @@ async function showPosts() {
 
 }
 
-showPosts()
+showPosts(url)
+
+
+
+
+
+function myForm(e) {
+    e.preventDefault(); // stop form from refreshing the page
+    alert("Form submission prevented!");
+
+    function login(url) {
+        const username = document.getElementById('username').value
+        const password = document.getElementById('password').value
+        const params = {
+            "username": username,
+            "password": password
+        }
+        axios.post(`${url}login`, params)
+            .then((response) => {
+                console.log(response.date);
+
+            })
+    }
+
+
+
+
+}
