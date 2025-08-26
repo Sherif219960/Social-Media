@@ -3,15 +3,6 @@ let token;
 token = localStorage.getItem("token");
 const login_logout = document.querySelector(".login-logout");
 
-if (token == null) {
-  console.log("The Token Is Empty");
-  showLoginBtn();
-} else {
-  console.log(token);
-  console.log(JSON.parse(localStorage.getItem("user")));
-  showLogoutBtn();
-}
-
 // const btn_SignIn = document.querySelector(".signIn");
 // const btn_SignUp = document.querySelector(".signUp");
 // const btn_LogOut = document.querySelector(".logOut");
@@ -93,12 +84,13 @@ function login(url) {
     .then((response) => {
       token = response.data.token;
       const user = response.data.user;
-
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      successLogin(`Hi ${user.username} Login successes`, "success");
+      showLogoutBtn();
     })
     .catch((error) => {
-      console.log(error.response.data.message);
+      console.log(error);
     });
 }
 
@@ -107,35 +99,31 @@ function myForm(e) {
   // hid modal
   const modalEl = document.getElementById("loginModal");
   const Modal = bootstrap.Modal.getInstance(modalEl);
-
   login(url);
-  successLogin();
-
   document.activeElement.blur();
-  e.target.reset();
   Modal.hide();
-  showLogoutBtn();
 }
 
-function successLogin() {
+function successLogin(message, type) {
   const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
-
-  // Helper function to create alert
   const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = `
-        <div class="alert alert-overlay alert-${type} alert-dismissible fade show" role="alert">
-               <div>${message}</div>
-               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        `;
+      <div class="alert alert-${type} show fade alert-dismissible" role="alert">
+         <strong>${message}</strong>
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    `;
 
-    // ⏳ Auto close after 1 second
+    // Close alert automatically after 1 second
     setTimeout(() => {
-      const alert = bootstrap.Alert.getOrCreateInstance(alertPlaceholder);
+      const alert = bootstrap.Alert.getOrCreateInstance(
+        alertPlaceholder.querySelector(".alert")
+      );
       alert.close();
     }, 1000);
   };
-  appendAlert("success logged in...... ");
+
+  appendAlert(message, type);
 }
 
 // Accessibility improvements
@@ -178,12 +166,12 @@ function showLoginBtn() {
                 <form onsubmit="myForm(event)">
                     <div class="mb-3 text-start">
                       <label for="username" class="form-label">User Name</label>
-                      <input type="text" class="form-control" id="username"
+                      <input type="text" class="form-control" value='sherif' id="username"
                           placeholder="Enter your username">
                     </div>
                     <div class="mb-3 text-start">
                       <label for="password" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="password"
+                      <input type="text" class="form-control" value='123456' id="password"
                           placeholder="Enter your password">
                     </div>
 
@@ -218,4 +206,14 @@ function logOut() {
     console.log("not item in localStorage");
     showLoginBtn();
   }
+  successLogin("Done Logout success", "danger");
+}
+
+if (token == null) {
+  console.log("The Token Is Empty");
+  showLoginBtn();
+} else {
+  console.log(token);
+  console.log(JSON.parse(localStorage.getItem("user")));
+  showLogoutBtn();
 }
