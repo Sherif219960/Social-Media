@@ -17,13 +17,18 @@
 </head>
 
 <body class="bg-dark text-light">
+
    <div class="container border p-2 bg-light text-dark min-vh-100 rounded">
+      <!-- Success Login Alert -->
+
+
+      <div id="liveAlertPlaceholder"></div>
 
       <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
-         <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg text-center navbar-dark bg-dark rounded">
+         <div class="container">
             <a class="navbar-brand" href="#">PostBook</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                <span class="navbar-toggler-icon"></span>
             </button>
@@ -38,37 +43,38 @@
                </ul>
 
                <div class="d-flex login-logout w-100 justify-content-end">
+
                   <!-- Button to Open Modal -->
-                  <button type="button" class="btn btn-outline-primary me-2 btn-sm" data-bs-toggle="modal"
+                  <button class="btn btn-outline-primary  signIn me-2 btn-sm" data-bs-toggle="modal"
                      data-bs-target="#loginModal">
                      Login
                   </button>
 
                   <!-- Modal -->
-                  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel"
-                     aria-hidden="true">
+                  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel">
                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content shadow-lg rounded-4">
+                        <div class="modal-content shadow-lg rounded-3">
                            <div class="modal-header">
                               <h5 class="modal-title" id="loginModalLabel">Login</h5>
                               <button type="button" class="btn-close" data-bs-dismiss="modal"
                                  aria-label="Close"></button>
                            </div>
                            <div class="modal-body">
+
                               <!-- Login Form -->
                               <form onsubmit="myForm(event)">
-                                 <div class="mb-3">
-                                    <label for="username" class="form-label">userName</label>
+                                 <div class="mb-3 text-start">
+                                    <label for="username" class="form-label">User Name</label>
                                     <input type="text" class="form-control" id="username"
                                        placeholder="Enter your username">
                                  </div>
-                                 <div class="mb-3">
+                                 <div class="mb-3 text-start">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="text" class="form-control" id="password"
+                                    <input type="password" class="form-control" id="password"
                                        placeholder="Enter your password">
                                  </div>
 
-                                 <button type="submit" class="btn btn-primary w-100" onclick="login()">Login</button>
+                                 <button type="submit" class="btn btn-primary w-100">Login</button>
                               </form>
                            </div>
                            <div class="modal-footer">
@@ -78,8 +84,7 @@
                      </div>
                   </div>
 
-                  <button class="btn btn-outline-success btn-sm me-2" type="button">Sign Up</button>
-
+                  <button class="btn btn-outline-success  btn-sm me-2 signUp" type="button">Sign Up</button>
                </div>
             </div>
          </div>
