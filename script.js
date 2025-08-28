@@ -1,12 +1,12 @@
+if (localStorage.length != 0) {
+  toggleLoginSection("toggle", "d-none");
+} else {
+  toggleLogoutSection("toggle", "d-none");
+}
 const url = "https://tarmeezacademy.com/api/v1";
 let token;
 token = localStorage.getItem("token");
 const login_logout = document.querySelector(".login-logout");
-
-// const btn_SignIn = document.querySelector(".signIn");
-// const btn_SignUp = document.querySelector(".signUp");
-// const btn_LogOut = document.querySelector(".logOut");
-// const user_Image = document.querySelector(".user-image");
 
 async function showPosts(url) {
   const post_section = document.querySelector(".post-section");
@@ -86,8 +86,9 @@ function login(url) {
       const user = response.data.user;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      successLogin(`Hi ${user.username} Login successes`, "success");
-      showLogoutBtn();
+      successMessage(`Hi ${user.username} Login successes`, "success");
+      toggleLogoutSection("remove", "d-none");
+      toggleLoginSection("add", "d-none");
     })
     .catch((error) => {
       console.log(error);
@@ -104,7 +105,7 @@ function myForm(e) {
   Modal.hide();
 }
 
-function successLogin(message, type) {
+function successMessage(message, type) {
   const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
   const appendAlert = (message, type) => {
     alertPlaceholder.innerHTML = `
@@ -117,7 +118,7 @@ function successLogin(message, type) {
     // Close alert automatically after 1 second
     setTimeout(() => {
       const alert = bootstrap.Alert.getOrCreateInstance(
-        alertPlaceholder.querySelector(".alert")
+        document.querySelector(".alert")
       );
       alert.close();
     }, 1000);
@@ -126,94 +127,86 @@ function successLogin(message, type) {
   appendAlert(message, type);
 }
 
-// Accessibility improvements
-const loginModalEl = document.getElementById("loginModal");
-
-// Focus username field when modal opens
-loginModalEl.addEventListener("shown.bs.modal", () => {
-  document.getElementById("username").focus();
-});
-
-// Restore focus to trigger button when modal closes
-loginModalEl.addEventListener("hidden.bs.modal", () => {
-  const triggerBtn = document.querySelector('[data-bs-target="#loginModal"]');
-  if (triggerBtn) {
-    triggerBtn.focus();
-  } else {
-    document.body.focus();
-  }
-});
-
-function showLoginBtn() {
-  login_logout.innerHTML = `
-      <!-- Button to Open Modal -->
-    <button class="btn btn-outline-primary signIn me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
-        Login
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content shadow-lg rounded-3">
-              <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-
-                <!-- Login Form -->
-                <form onsubmit="myForm(event)">
-                    <div class="mb-3 text-start">
-                      <label for="username" class="form-label">User Name</label>
-                      <input type="text" class="form-control" value='sherif' id="username"
-                          placeholder="Enter your username">
-                    </div>
-                    <div class="mb-3 text-start">
-                      <label for="password" class="form-label">Password</label>
-                      <input type="text" class="form-control" value='123456' id="password"
-                          placeholder="Enter your password">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <p class="m-0">Don’t have an account? <a href="#">Sign up</a></p>
-              </div>
-          </div>
-        </div>
-    </div>
-
-    <button class="btn btn-outline-success  btn-sm me-2 signUp" type="button">Sign Up</button>
-  `;
+function toggleLoginSection(atr, value) {
+  const sectionLogin = document.querySelector(".hideLoginBtn");
+  sectionLogin.classList[atr](`${value}`);
 }
-function showLogoutBtn() {
-  login_logout.innerHTML = `
-    <button type="button" class="btn btn-outline-danger logOut me-2 btn-sm" onclick="logOut()">
-        logOut
-    </button>
-
-    <img
-        src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
-        alt="user" class="rounded-circle user-image " width="30" height="30">
-  `;
+function toggleLogoutSection(atr, value) {
+  const sectionLogout = document.querySelector(".showLogoutBtn");
+  sectionLogout.classList[atr](`${value}`);
 }
 
 function logOut() {
   localStorage.clear();
-  if (localStorage.length <= 0) {
-    console.log("not item in localStorage");
-    showLoginBtn();
-  }
-  successLogin("Done Logout success", "danger");
+  toggleLogoutSection("add", "d-none");
+  toggleLoginSection("remove", "d-none");
+  successMessage("! Note You make Logout ....", "danger");
 }
 
-if (token == null) {
-  console.log("The Token Is Empty");
-  showLoginBtn();
-} else {
-  console.log(token);
-  console.log(JSON.parse(localStorage.getItem("user")));
-  showLogoutBtn();
+function signUpModal() {
+  console.clear();
+  console.log("true");
+}
+
+// Accessibility improvements to make focus on input
+function improvements(idModal, idInput) {
+  const loginModalEl = document.getElementById(`${idModal}`);
+
+  // Focus username field when modal opens
+  loginModalEl.addEventListener("shown.bs.modal", () => {
+    document.getElementById(`${idInput}`).focus();
+  });
+
+  // Restore focus to trigger button when modal closes
+  loginModalEl.addEventListener("hidden.bs.modal", () => {
+    const triggerBtn = document.querySelector(`[data-bs-target="#${idModal}"]`);
+
+    if (triggerBtn) {
+      triggerBtn.focus();
+    } else {
+      document.body.focus();
+    }
+  });
+}
+
+improvements("loginModal", "username");
+improvements("signupModal", "name");
+
+function myFormSignUp(e) {
+  // stop form from refreshing the page
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  const fullName = document.getElementById("fullName").value;
+  // const image = document.getElementById("imageUpload").files[0];
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("signUp-password").value;
+
+  // hid modal
+  const modalEl = document.getElementById("signupModal");
+  const Modal = bootstrap.Modal.getInstance(modalEl);
+  document.activeElement.blur();
+  Modal.hide();
+
+  // using axios to make Signup
+  function signupForm() {
+    const params = {
+      username: fullName,
+      email: email,
+      name: name,
+      password: password,
+    };
+
+    axios
+      .post(`${url}/register`, params)
+      .then((res) => {
+        console.log("✅ User registered:", res.data);
+        successMessage("✅ User registered successfully", "success");
+        toggleLogoutSection("remove", "d-none");
+        toggleLoginSection("add", "d-none");
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  }
+  signupForm();
 }
