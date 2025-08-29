@@ -1,6 +1,9 @@
 const addPostBtn = document.querySelector(".addPost");
 const user_info_name = document.querySelector(".user-info-name");
 const user_info_image = document.querySelector(".user-info-image");
+const url = "https://tarmeezacademy.com/api/v1";
+let currentPage = 1;
+let last_page = 0;
 
 if (localStorage.length != 0) {
   toggleLoginSection("toggle", "d-none");
@@ -12,18 +15,22 @@ if (localStorage.length != 0) {
   toggleLogoutSection("toggle", "d-none");
 }
 
-const url = "https://tarmeezacademy.com/api/v1";
 let token;
 token = localStorage.getItem("token");
 const login_logout = document.querySelector(".login-logout");
 
 // make function to show posts
-async function showPosts(url) {
+async function showPosts(url, page = 1, reload = true) {
   const post_section = document.querySelector(".post-section");
-  post_section.innerHTML = "";
+  if (reload) {
+    post_section.innerHTML = "";
+  }
+
   try {
-    const response = await axios.get(`${url}/posts?limit=5`);
+    const response = await axios.get(`${url}/posts?limit=20&page=${page}`);
     const { data } = response.data;
+    last_page = response.data.meta.last_page;
+
     for (const post of data) {
       let { created_at, title, image, comments_count, body } = post;
       let { username, profile_image } = post.author;
@@ -71,8 +78,9 @@ async function showPosts(url) {
   }
 }
 
-showPosts(url);
+showPosts(url, 1);
 
+// function of login user
 function login(url) {
   let username = document.getElementById("username").value;
   let password = document.getElementById("password").value;
@@ -275,9 +283,23 @@ function scrollToTop() {
 
 window.addEventListener("scroll", () => {
   const scrollBtnTop = document.querySelector(".scroll-to-top");
+
   if (window.scrollY >= 100) {
     scrollBtnTop.classList.remove("d-none");
   } else {
     scrollBtnTop.classList.add("d-none");
   }
+  infiniteScroll();
 });
+
+// make function to check infinite scroll.
+function infiniteScroll() {
+  // total page height
+  const endOfPage =
+    window.innerHeight + window.pageYOffset >= document.body.offsetHeight;
+  if (endOfPage && last_page > currentPage) {
+    currentPage += 1;
+    console.log("Load more content..." + currentPage);
+    showPosts(url, currentPage, false);
+  }
+}
