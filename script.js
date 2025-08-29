@@ -1,10 +1,17 @@
 const addPostBtn = document.querySelector(".addPost");
+const user_info_name = document.querySelector(".user-info-name");
+const user_info_image = document.querySelector(".user-info-image");
+
 if (localStorage.length != 0) {
   toggleLoginSection("toggle", "d-none");
   addPostBtn.classList.remove("d-none");
+  const { name, profile_image } = JSON.parse(localStorage.getItem("user"));
+  user_info_name.innerHTML = name;
+  user_info_image.src = profile_image;
 } else {
   toggleLogoutSection("toggle", "d-none");
 }
+
 const url = "https://tarmeezacademy.com/api/v1";
 let token;
 token = localStorage.getItem("token");
@@ -17,7 +24,6 @@ async function showPosts(url) {
   try {
     const response = await axios.get(`${url}/posts?limit=5`);
     const { data } = response.data;
-    console.log(data);
     for (const post of data) {
       let { created_at, title, image, comments_count, body } = post;
       let { username, profile_image } = post.author;
@@ -38,7 +44,10 @@ async function showPosts(url) {
                     <span class="small m-1">2 ${created_at}</span>
                     <div class="card-body">
 
-                        <h5 class="card-title">${title}</h5>
+                        <h5 class="card-title">${
+                          title ??
+                          "loremLorem ipsum dolor sit amet consectetur adipisicing elit. Nam delectus nostrum in, itaque cumque dolores ratione molestias est cum esse natus repellat expedita?"
+                        }</h5>
                         <p class="card-text">
                             ${body}
                         </p>
@@ -67,7 +76,6 @@ showPosts(url);
 function login(url) {
   let username = document.getElementById("username").value;
   let password = document.getElementById("password").value;
-  const user_info_name = document.querySelector(".user-info-name");
 
   const params = {
     username: username,
@@ -79,7 +87,10 @@ function login(url) {
     .then((response) => {
       token = response.data.token;
       const user = response.data.user;
+      console.log(user);
       user_info_name.innerHTML = user.name;
+      user_info_image.src = user.profile_image;
+
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       successMessage(`Hi ${user.username} Login successes`, "success");
@@ -90,8 +101,9 @@ function login(url) {
       toggleLoginSection("add", "d-none");
     })
     .catch((error) => {
-      const message = error.response.data.message;
-      successMessage(`❌ ${message}`, "danger");
+      const message = error;
+      console.log(message);
+      // successMessage(`❌ ${message}`, "danger");
     });
 }
 
@@ -179,7 +191,7 @@ function myFormSignUp(e) {
   e.preventDefault();
   const name = document.getElementById("name").value;
   const fullName = document.getElementById("fullName").value;
-  // const image = document.getElementById("imageUpload").files[0];
+  const image = document.getElementById("imageUpload").files[0];
   const email = document.getElementById("email").value;
   const password = document.getElementById("signUp-password").value;
 
@@ -191,15 +203,19 @@ function myFormSignUp(e) {
 
   // using axios to make Signup
   function signupForm() {
-    const params = {
-      username: fullName,
-      email: email,
-      name: name,
-      password: password,
-    };
+    const formData = new FormData();
+    formData.append("username", fullName);
+    formData.append("name", name);
+    formData.append("image", image);
+    formData.append("password", password);
+    formData.append("email", email);
 
     axios
-      .post(`${url}/register`, params)
+      .post(`${url}/register`, formData, {
+        headers: {
+          Accept: "application/json",
+        },
+      })
       .then((res) => {
         console.log("✅ User registered:", res.data.token, res.data.user);
         localStorage.setItem("token", res.data.token);
@@ -229,7 +245,7 @@ function createPost() {
   axios
     .post(`https://tarmeezacademy.com/api/v1/posts`, formData, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Example
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
     .then((response) => {
@@ -240,9 +256,10 @@ function createPost() {
       const Modal = bootstrap.Modal.getInstance(modalEl);
       document.activeElement.blur();
       Modal.hide();
+      successMessage("Done Created new Post", "success");
     })
     .catch((error) => {
-      console.log(error.response.data.message);
+      successMessage(`${error.response.data.message}`, "danger");
     });
 }
 
