@@ -156,14 +156,16 @@
                   </div>
 
                   <!-- section of Logout Button -->
-                  <div class="showLogoutBtn">
-                     <button class="btn btn-outline-danger logOut me-2 btn-sm" onclick="logOut()">
+                  <div class="showLogoutBtn text-white">
+                     <button class="btn btn-outline-danger logOut btn-sm" onclick="logOut()">
                         logOut
                      </button>
-
-                     <img
-                        src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                        alt="user" class="rounded-circle user-image " width="30" height="30">
+                     <div class="user-info d-inline-flex align-items-between">
+                        <p class="mx-1 user-info-name">sheko</p>
+                        <img
+                           src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
+                           alt="user" class="rounded-circle user-info-iamge" width="30" height="30">
+                     </div>
                   </div>
                </div>
 
@@ -208,8 +210,59 @@
          </div>
       </div>
 
-      <!-- // main content of Posts// -->
+      <!-- // main button to add post // -->
+      <button class="btn btn-primary addPost position-fixed d-none shadow rounded-circle " data-bs-toggle="modal"
+         data-bs-target="#postModal" style="right: 10%; top: 170px;">
+         <i class="fa-solid fa-plus"></i>
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content shadow-lg rounded-3">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="postModalLabel">Add New Post</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <form id="postForm">
+                     <!-- Title -->
+                     <div class="mb-3">
+                        <label for="postTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="postTitle" placeholder="Enter post title">
+                     </div>
+
+                     <!-- Content -->
+                     <div class="mb-3">
+                        <label for="postContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="postContent" rows="4"
+                           placeholder="Write your post..."></textarea>
+                     </div>
+
+                     <!-- Image -->
+                     <div class="mb-3">
+                        <label for="postImage" class="form-label">Upload Image</label>
+                        <input class="form-control" type="file" id="postImage" accept="image/*">
+                     </div>
+                  </form>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" onclick="createPost()">Create Post</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Scroll to Top Button -->
+      <button class="btn btn-secondary position-fixed scroll-to-top d-none" style="right: 10px; bottom: 10px;"
+         onclick="scrollToTop()">
+         <i class="fa-solid fa-arrow-up"></i>
+      </button>
    </div>
+
+
+
 
    <!-- Bootstrap JS Bundle CDN (includes Popper) -->
    <script src="/node_modules/axios/dist/axios.js"></script>
@@ -218,8 +271,3 @@
 </body>
 
 </html>
-
-<!-- 
-  <img src="https://thf.bing.com/th/id/OIP.2BWBErGDX8VTx-S_lag_BQAAAA?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                                        alt="user" class="rounded-circle" width="30" height="30">
--->
